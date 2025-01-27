@@ -1,0 +1,131 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #282a36;
+    color: #f8f8f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #bd93f9;
+}
+
+/* Form Section */
+#form-section {
+    background-color: #44475a;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+#form-section h2 {
+    color: #ff79c6;
+    margin-bottom: 15px;
+}
+
+/* Form Inputs */
+#address-container {
+    margin-bottom: 15px;
+}
+
+.address-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.address-field input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #6272a4;
+    border-radius: 25px;
+    background-color: #282a36;
+    color: #f8f8f2;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.address-field input:focus {
+    border-color: #50fa7b;
+    outline: none;
+}
+
+.add-address-btn {
+    background-color: #6272a4;
+    color: #f8f8f2;
+    border: none;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.add-address-btn:hover {
+    background-color: #50fa7b;
+    color: #282a36;
+}
+
+.add-address-btn:active {
+    transform: scale(0.95);
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 25px;
+    background-color: #6272a4;
+    color: #f8f8f2;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #50fa7b;
+    color: #282a36;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #form-section {
+        width: 80%;
+        padding: 15px;
+        max-width: 400px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+}
