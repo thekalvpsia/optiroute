@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiRoute</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>OptiRoute</h1>
+    </header>
+
+    <main>
+        <section id="form-section">
+            <h2>Enter Delivery Locations</h2>
+            <form id="route-form">
+                <div id="address-container">
+                    <div class="address-field">
+                        <input
+                            type="text"
+                            name="address"
+                            placeholder="Enter an address"
+                            required
+                        />
+                        <button type="button" class="add-address-btn" aria-label="Add address">
+                            +
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" id="calculate-route-btn">Calculate Route</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
