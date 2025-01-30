@@ -15,6 +15,24 @@
         <section id="form-section">
             <h2>Enter Delivery Locations</h2>
             <form id="route-form">
+                <!-- Starting Point Input -->
+                <div class="starting-point">
+                    <label for="starting-address">Starting Point:</label>
+                    <div class="starting-point-container">
+                        <input
+                            type="text"
+                            id="starting-address"
+                            name="starting_address"
+                            placeholder="Enter starting location"
+                            required
+                        />
+                        <button type="button" id="get-location-btn" aria-label="Use current location">
+                            <img src="/static/images/location-icon.png" alt="Location" />
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Delivery Locations -->
                 <div id="address-container">
                     <div class="address-field">
                         <input
@@ -24,10 +42,11 @@
                             required
                         />
                         <button type="button" class="add-address-btn" aria-label="Add address">
-                            +
+                            <img src="/static/images/add-icon.png" alt="Add" />
                         </button>
                     </div>
                 </div>
+
                 <button type="submit" id="calculate-route-btn">Calculate Route</button>
             </form>
         </section>
