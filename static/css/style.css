@@ -41,7 +41,7 @@ header h1 {
 }
 
 #form-section h2 {
-    color: #ff79c6;
+    color: #f8f8f2;
     margin-bottom: 15px;
 }
 
@@ -76,6 +76,7 @@ header h1 {
     background-color: #6272a4;
     color: #f8f8f2;
     border: none;
+    border-radius: 25px;
     font-size: 1.5rem;
     width: 40px;
     height: 40px;
@@ -134,6 +135,55 @@ button:active {
 
 .remove-address-btn:hover {
     background-color: #ff5555;
+}
+
+.starting-point-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#starting-address {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #6272a4;
+    border-radius: 25px;
+    background-color: #282a36;
+    color: #f8f8f2;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+#get-location-btn {
+    background-color: #6272a4;
+    color: #f8f8f2;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+#get-location-btn:hover {
+    background-color: #50fa7b;
+    color: #282a36;
+}
+
+button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+}
+
+.icon-img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
 }
 
 /* Responsive Design */
