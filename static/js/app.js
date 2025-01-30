@@ -16,7 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
         removeButton.type = "button";
         removeButton.classList.add("remove-address-btn");
         removeButton.setAttribute("aria-label", "Remove address");
-        removeButton.innerHTML = "🗑️";
+        
+        const removeIcon = document.createElement("img");
+        removeIcon.src = "/static/images/remove-icon.png";
+        removeIcon.alt = "Remove";
+        removeIcon.classList.add("icon-img");
+
+        removeButton.appendChild(removeIcon);
 
         // Remove address field when clicking the remove button
         removeButton.addEventListener("click", () => {
