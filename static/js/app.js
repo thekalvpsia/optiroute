@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const addressContainer = document.getElementById("address-container");
+    const addAddressBtn = document.getElementById("add-address-btn");
 
     // Function to create a new address input field with a remove button
     function createAddressField() {
@@ -37,8 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         addressContainer.appendChild(addressField);
     }
 
-    // Attach event listener to the existing plus button for adding new fields
-    document.querySelector(".add-address-btn").addEventListener("click", () => {
+    // Keep Add Destination button always at the bottom
+    addAddressBtn.addEventListener("click", () => {
         createAddressField();
     });
 });
