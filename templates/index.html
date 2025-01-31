@@ -9,15 +9,14 @@
 <body>
     <header>
         <h1>OptiRoute</h1>
+        <p class="subtitle">Plan the most efficient route for your deliveries.</p>
     </header>
 
     <main>
         <section id="form-section">
-            <h2>Enter Delivery Locations</h2>
             <form id="route-form">
                 <!-- Starting Point Input -->
                 <div class="starting-point">
-                    <label for="starting-address">Starting Point:</label>
                     <div class="starting-point-container">
                         <input
                             type="text"
@@ -26,12 +25,14 @@
                             placeholder="Enter starting location"
                             required
                         />
-                        <button type="button" id="get-location-btn" aria-label="Use current location">
-                            <img src="/static/images/location-icon.png" alt="Location" />
-                        </button>
+                        <button class="invisible-btn" aria-hidden="true"></button>
                     </div>
+                    <button type="button" id="get-location-btn">
+                        <img src="/static/images/location-icon.png" alt="Location" />
+                        Use current location
+                    </button>
                 </div>
-                
+
                 <!-- Delivery Locations -->
                 <div id="address-container">
                     <div class="address-field">
@@ -40,13 +41,19 @@
                             name="address"
                             placeholder="Enter an address"
                             required
+                            
                         />
-                        <button type="button" class="add-address-btn" aria-label="Add address">
-                            <img src="/static/images/add-icon.png" alt="Add" />
-                        </button>
+                        <button class="invisible-btn" aria-hidden="true"></button>
                     </div>
                 </div>
 
+                <!-- Add Destination Button -->
+                <button type="button" id="add-address-btn">
+                    <img src="/static/images/add-icon.png" alt="Add" />
+                    Add destination
+                </button>
+
+                <!-- Calculate Route Button -->
                 <button type="submit" id="calculate-route-btn">Calculate Route</button>
             </form>
         </section>

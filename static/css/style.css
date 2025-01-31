@@ -29,6 +29,15 @@ header h1 {
     color: #bd93f9;
 }
 
+.subtitle {
+    font-size: 1.2rem;
+    color: #f8f8f2;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
 /* Form Section */
 #form-section {
     background-color: #44475a;
@@ -45,19 +54,24 @@ header h1 {
     margin-bottom: 15px;
 }
 
-/* Form Inputs */
-#address-container {
-    margin-bottom: 15px;
-}
-
-.address-field {
+.address-field,
+.starting-point-container {
+    width: 100%;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
 }
 
-.address-field input {
-    flex: 1;
+/* Invisible button to match spacing */
+.invisible-btn {
+    width: 40px;
+    height: 40px;
+    visibility: hidden;
+    margin-left: 10px;
+}
+
+.address-field input,
+#starting-address {
+    width: 100%;
     padding: 10px;
     border: 1px solid #6272a4;
     border-radius: 25px;
@@ -67,39 +81,26 @@ header h1 {
     box-sizing: border-box;
 }
 
-.address-field input:focus {
-    border-color: #50fa7b;
-    outline: none;
+#address-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.add-address-btn {
-    background-color: #6272a4;
-    color: #f8f8f2;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
+.address-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* General button styling */
+button {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease;
-}
-
-.add-address-btn:hover {
-    background-color: #50fa7b;
-    color: #282a36;
-}
-
-.add-address-btn:active {
-    transform: scale(0.95);
-}
-
-/* Buttons */
-button {
-    padding: 10px 20px;
-    margin: 5px;
+    padding: 10px;
     border: none;
     border-radius: 25px;
     background-color: #6272a4;
@@ -107,18 +108,49 @@ button {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+    margin: 10px auto;
+}
+
+button img {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+    margin-right: 10px;
 }
 
 button:hover {
-    background-color: #50fa7b;
-    color: #282a36;
+    background-color: #525c79;
 }
 
 button:active {
     transform: scale(0.98);
 }
 
+#get-location-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#add-address-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#get-location-btn,
+#add-address-btn {
+    margin-top: 10px;
+}
+
+#add-address-btn {
+    align-self: center;
+}
+
 .remove-address-btn {
+    margin-left: 10px;
     background-color: #6272a4;
     color: #f8f8f2;
     border: none;
@@ -137,53 +169,11 @@ button:active {
     background-color: #ff5555;
 }
 
-.starting-point-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-#starting-address {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #6272a4;
-    border-radius: 25px;
-    background-color: #282a36;
-    color: #f8f8f2;
-    font-size: 1rem;
-    box-sizing: border-box;
-}
-
-#get-location-btn {
-    background-color: #6272a4;
-    color: #f8f8f2;
-    border: none;
-    border-radius: 25px;
-    font-size: 1.2rem;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-}
-
-#get-location-btn:hover {
-    background-color: #50fa7b;
-    color: #282a36;
-}
-
-button img {
-    width: 20px;
-    height: 20px;
-    filter: invert(1);
-}
-
 .icon-img {
     width: 20px;
     height: 20px;
     filter: invert(1);
+    margin: 0;
 }
 
 /* Responsive Design */
