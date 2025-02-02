@@ -29,45 +29,34 @@ def get_coordinates(address):
         print(f"Request error: {e}")
         return None
 
-# Function to calculate the shortest route using brute force TSP
-def calculate_shortest_route(starting_point, locations):
-    all_locations = [starting_point] + locations + [starting_point]  # Ensure it returns to the start
+def calculate_optimized_route(starting_point, locations):
+    """Uses Google Directions API to calculate the optimal route."""
+    all_locations = [starting_point] + locations + [starting_point]  # Ensure return to start
+
+    # Convert addresses to coordinates
     location_coords = [get_coordinates(loc) for loc in all_locations]
 
-    # Handle invalid addresses
     if None in location_coords:
         invalid_addresses = [all_locations[i] for i, coord in enumerate(location_coords) if coord is None]
         return {"error": "Invalid addresses", "invalid_addresses": invalid_addresses}
 
-    # Generate all possible orders of visiting locations
-    shortest_path = None
-    shortest_distance = float("inf")
+    origin = f"{location_coords[0][0]},{location_coords[0][1]}"
+    destination = f"{location_coords[-1][0]},{location_coords[-1][1]}"
+    waypoints = "|".join([f"{lat},{lng}" for lat, lng in location_coords[1:-1]])
 
-    for perm in itertools.permutations(location_coords[1:-1]):  # Permute only delivery locations
-        route = [location_coords[0]] + list(perm) + [location_coords[0]]
-        distance = 0
+    url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&waypoints=optimize:true|{waypoints}&key={API_KEY}"
 
-        try:
-            # Calculate total route distance using Google Maps API
-            for i in range(len(route) - 1):
-                url = f"https://maps.googleapis.com/maps/api/distancematrix/json?origins={route[i][0]},{route[i][1]}&destinations={route[i+1][0]},{route[i+1][1]}&key={API_KEY}"
-                response = requests.get(url).json()
-                
-                if response.get("status") != "OK":
-                    print(f"Distance matrix API failed: {response}")
-                    return {"error": "Distance calculation failed"}
+    response = requests.get(url).json()
 
-                distance += response["rows"][0]["elements"][0]["distance"]["value"]
+    if response.get("status") == "OK":
+        optimized_waypoints = response["routes"][0]["waypoint_order"]
+        optimized_route = [location_coords[i+1] for i in optimized_waypoints]  # Reorder based on Google's response
+        optimized_route.insert(0, location_coords[0])  # Add start
+        optimized_route.append(location_coords[-1])  # Add end
 
-            # Update shortest path
-            if distance < shortest_distance:
-                shortest_distance = distance
-                shortest_path = route
-        except requests.exceptions.RequestException as e:
-            print(f"Distance matrix API request error: {e}")
-            return {"error": "API request failed"}
-
-    return shortest_path
+        return optimized_route
+    else:
+        return {"error": "Failed to optimize route", "api_response": response}
 
 # Function to generate Google Maps link for navigation
 def generate_google_maps_link(route):
@@ -96,8 +85,8 @@ def calculate_route():
     if not starting_point or not delivery_locations:
         return jsonify({"error": "Missing required fields"}), 400
 
-    # Compute the shortest route
-    route = calculate_shortest_route(starting_point, delivery_locations)
+    # Compute the optimized route
+    route = calculate_optimized_route(starting_point, delivery_locations)
 
     # Handle errors in route calculation
     if isinstance(route, dict) and "error" in route:
