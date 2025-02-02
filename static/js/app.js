@@ -1,3 +1,59 @@
+async function loadGoogleMapsAPI() {
+    try {
+        const response = await fetch("/get-api-key");
+        const data = await response.json();
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.api_key}&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        script.setAttribute("loading", "async");
+
+        script.onload = () => {
+            console.log("Google Maps API loaded successfully.");
+            initializeAutocompleteFields(); // Initialize autocomplete only after API loads
+        };
+
+        document.getElementById("google-maps-script").replaceWith(script);
+    } catch (error) {
+        console.error("Failed to load Google Maps API:", error);
+    }
+}
+
+// Initialize autocomplete for input fields AFTER Google Maps API is loaded
+function initializeAutocompleteFields() {
+    const startingAddressInput = document.getElementById("starting-address");
+    if (startingAddressInput) {
+        new google.maps.places.Autocomplete(startingAddressInput, {
+            types: ["establishment", "geocode"],
+        });
+    }
+
+    document.querySelectorAll("input[name='address']").forEach((input) => {
+        new google.maps.places.Autocomplete(input, {
+            types: ["establishment", "geocode"],
+        });
+    });
+
+    console.log("Autocomplete initialized for all input fields.");
+}
+
+// Function to initialize autocomplete with business names and addresses
+function initializeAutocomplete(inputElement) {
+    if (typeof google !== "undefined" && google.maps && google.maps.places) {
+        new google.maps.places.Autocomplete(inputElement, {
+            types: ["establishment", "geocode"],
+        });
+    } else {
+        console.warn("Google Maps API not loaded yet.");
+    }
+}
+
+// Handle page load
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadGoogleMapsAPI(); // Load Google Maps API first
+});
+
+// Address field management
 document.addEventListener("DOMContentLoaded", () => {
     const addressContainer = document.getElementById("address-container");
     const addAddressBtn = document.getElementById("add-address-btn");
@@ -11,8 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const input = document.createElement("input");
         input.type = "text";
         input.name = "address";
-        input.placeholder = "Enter an address";
+        input.placeholder = "Enter an address or place";
         input.required = true;
+
+        // Initialize autocomplete when new field is added
+        initializeAutocomplete(input);
 
         const removeButton = document.createElement("button");
         removeButton.type = "button";
