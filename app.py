@@ -2,10 +2,10 @@ from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 import os
 import requests
-import itertools
 
 app = Flask(__name__)
 load_dotenv()
+
 API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
 # Function to get coordinates from an address
@@ -75,6 +75,10 @@ def index():
 @app.route("/results")
 def results():
     return render_template("results.html")
+
+@app.route("/get-api-key")
+def get_api_key():
+    return jsonify({"api_key": API_KEY})
 
 @app.route("/calculate-route", methods=["POST"])
 def calculate_route():
