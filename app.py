@@ -15,15 +15,15 @@ def get_coordinates(address):
 
     url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={API_KEY}"
     try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx, 5xx)
-        data = response.json()
+        response = requests.get(url).json()
 
-        if data.get("status") == "OK":
-            location = data["results"][0]["geometry"]["location"]
+        if response.get("status") == "OK":
+            location = response["results"][0]["geometry"]["location"]
             return (location["lat"], location["lng"])
+        elif response.get("status") == "ZERO_RESULTS":
+            return {"error": f"Could not find a location for '{address}'. Try entering the full address instead."}
         else:
-            print(f"Geocoding failed for {address}: {data.get('status')}")
+            print(f"Geocoding failed for {address}: {response.get('status')}")
             return None  # Address could not be geocoded
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
@@ -36,27 +36,37 @@ def calculate_optimized_route(starting_point, locations):
     # Convert addresses to coordinates
     location_coords = [get_coordinates(loc) for loc in all_locations]
 
-    if None in location_coords:
-        invalid_addresses = [all_locations[i] for i, coord in enumerate(location_coords) if coord is None]
-        return {"error": "Invalid addresses", "invalid_addresses": invalid_addresses}
+    # Check for invalid locations (returned as dictionaries instead of tuples)
+    invalid_addresses = [all_locations[i] for i, coord in enumerate(location_coords) if isinstance(coord, dict) and "error" in coord]
 
-    origin = f"{location_coords[0][0]},{location_coords[0][1]}"
-    destination = f"{location_coords[-1][0]},{location_coords[-1][1]}"
-    waypoints = "|".join([f"{lat},{lng}" for lat, lng in location_coords[1:-1]])
+    if invalid_addresses:
+        return {"error": "Some locations could not be found. Try entering the full address instead.", "invalid_addresses": invalid_addresses}
 
-    url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&waypoints=optimize:true|{waypoints}&key={API_KEY}"
+    # Ensure all valid coordinates before formatting API request
+    if any(coord is None for coord in location_coords):
+        return {"error": "Invalid addresses detected.", "invalid_addresses": [all_locations[i] for i, coord in enumerate(location_coords) if coord is None]}
 
-    response = requests.get(url).json()
+    try:
+        origin = f"{location_coords[0][0]},{location_coords[0][1]}"
+        destination = f"{location_coords[-1][0]},{location_coords[-1][1]}"
+        waypoints = "|".join([f"{lat},{lng}" for lat, lng in location_coords[1:-1]])
 
-    if response.get("status") == "OK":
-        optimized_waypoints = response["routes"][0]["waypoint_order"]
-        optimized_route = [location_coords[i+1] for i in optimized_waypoints]  # Reorder based on Google's response
-        optimized_route.insert(0, location_coords[0])  # Add start
-        optimized_route.append(location_coords[-1])  # Add end
+        url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&waypoints=optimize:true|{waypoints}&key={API_KEY}"
+        response = requests.get(url).json()
 
-        return optimized_route
-    else:
-        return {"error": "Failed to optimize route", "api_response": response}
+        if response.get("status") == "OK":
+            optimized_waypoints = response["routes"][0]["waypoint_order"]
+            optimized_route = [location_coords[i+1] for i in optimized_waypoints]  # Reorder based on Google's response
+            optimized_route.insert(0, location_coords[0])  # Add start
+            optimized_route.append(location_coords[-1])  # Add end
+
+            return optimized_route
+
+        else:
+            return {"error": "Failed to optimize route", "api_response": response}
+
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {str(e)}"}
 
 # Function to generate Google Maps link for navigation
 def generate_google_maps_link(route):
@@ -89,15 +99,19 @@ def calculate_route():
     if not starting_point or not delivery_locations:
         return jsonify({"error": "Missing required fields"}), 400
 
-    # Compute the optimized route
-    route = calculate_optimized_route(starting_point, delivery_locations)
+    # Get the optimized route
+    route_response = calculate_optimized_route(starting_point, delivery_locations)
 
-    # Handle errors in route calculation
-    if isinstance(route, dict) and "error" in route:
-        return jsonify(route), 400
+    # Ensure route_response is extracted properly
+    if isinstance(route_response, dict) and "error" in route_response:
+        return jsonify(route_response), 400  # Return error JSON to frontend
 
-    maps_link = generate_google_maps_link(route)
-    return jsonify({"optimized_route": route, "maps_link": maps_link})
+    if not isinstance(route_response, list):
+        return jsonify({"error": "Unexpected response format from route calculation."}), 500
+
+    # Now we are guaranteed that route_response is a valid list of coordinates
+    maps_link = generate_google_maps_link(route_response)
+    return jsonify({"optimized_route": route_response, "maps_link": maps_link})
 
 if __name__ == '__main__':
     app.run(debug=True)

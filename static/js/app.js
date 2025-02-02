@@ -42,10 +42,17 @@ function initializeAutocomplete(inputElement) {
     if (typeof google !== "undefined" && google.maps && google.maps.places) {
         new google.maps.places.Autocomplete(inputElement, {
             types: ["establishment", "geocode"],
+            componentRestrictions: { country: "us" },
         });
     } else {
         console.warn("Google Maps API not loaded yet.");
     }
+}
+
+// Function to display geocoding errors as an alert
+function displayGeocodingError(invalidAddresses) {
+    const errorMessage = `The following locations could not be found:\n\n${invalidAddresses.join("\n")}\n\nTry entering the full address instead.`;
+    alert(errorMessage);
 }
 
 // Handle page load
@@ -120,13 +127,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "An error occurred while calculating the route.");
+                throw data; // Throw the entire response object to handle errors properly
+            }
+
+            // Handle locations that couldn't be geocoded
+            if (data.invalid_addresses && data.invalid_addresses.length > 0) {
+                displayGeocodingError(data.invalid_addresses);
+                return { error: "Some locations could not be found." };
             }
 
             return data;
         } catch (error) {
             console.error("Error fetching optimized route:", error);
-            return { error: error.message };
+            
+            if (error.invalid_addresses) {
+                displayGeocodingError(error.invalid_addresses);
+                return { error: "Handled" };
+            }
+            
+            return { error: error.error || "An unknown error occurred." };
         }
     }
 
@@ -152,9 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
         calculateRouteBtn.textContent = "Calculate Route";
         calculateRouteBtn.disabled = false;
 
-        if (result.error) {
-            displayError(result);
-        } else {
+        if (result.error && result.error !== "Handled") {
+            alert(result.error);
+            return;
+        }
+    
+        if (result.maps_link) {
             window.location.href = `/results?maps_link=${encodeURIComponent(result.maps_link)}`;
         }
     });
