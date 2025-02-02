@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimized Route - OptiRoute</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>OptiRoute</h1>
+    </header>
+
+    <main id="results-container">
+        <h2>Optimized Route</h2>
+        <p class="results-text">
+            Click the button below to open the optimized route in Google Maps:
+        </p>
+        <div class="results-buttons">
+            <a id="maps-link" href="#" target="_blank" class="maps-link">Open in Google Maps</a>
+            <button id="go-back-btn">Go Back</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const mapsLink = params.get("maps_link");
+
+            if (mapsLink) {
+                document.getElementById("maps-link").href = mapsLink;
+            } else {
+                document.getElementById("results-container").innerHTML = "<h2>Error</h2><p>Failed to generate route.</p>";
+            }
+
+            document.getElementById("go-back-btn").addEventListener("click", () => {
+                window.location.href = "/";
+            });
+        });
+    </script>
+</body>
+</html>

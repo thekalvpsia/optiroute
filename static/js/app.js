@@ -3,11 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const addAddressBtn = document.getElementById("add-address-btn");
     const calculateRouteBtn = document.getElementById("calculate-route-btn");
 
-    // Create a container for displaying results
-    const resultsContainer = document.createElement("div");
-    resultsContainer.id = "results-container";
-    document.body.appendChild(resultsContainer);
-
     // Function to create a new address input field with a remove button
     function createAddressField() {
         const addressField = document.createElement("div");
@@ -76,28 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to display the results
-    function displayResults(data) {
-        resultsContainer.innerHTML = `
-            <h3>Optimized Route</h3>
-            <p>Click the link below to open the route in Google Maps:</p>
-            <a href="${data.maps_link}" target="_blank" class="maps-link">Open in Google Maps</a>
-        `;
-    }
-
-    // Function to display error messages
-    function displayError(errorData) {
-        resultsContainer.innerHTML = `
-            <h3>Error</h3>
-            <p>${errorData.error}</p>
-            ${
-                errorData.invalid_addresses
-                    ? `<p>Invalid addresses: ${errorData.invalid_addresses.join(", ")}</p>`
-                    : ""
-            }
-        `;
-    }
-
     // Handle form submission
     calculateRouteBtn.addEventListener("click", async (event) => {
         event.preventDefault();
@@ -123,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result.error) {
             displayError(result);
         } else {
-            displayResults(result);
+            window.location.href = `/results?maps_link=${encodeURIComponent(result.maps_link)}`;
         }
     });
 });

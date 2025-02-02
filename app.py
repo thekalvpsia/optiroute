@@ -83,6 +83,10 @@ def generate_google_maps_link(route):
 def index():
     return render_template('index.html')
 
+@app.route("/results")
+def results():
+    return render_template("results.html")
+
 @app.route("/calculate-route", methods=["POST"])
 def calculate_route():
     data = request.json
