@@ -66,6 +66,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Address field management
 document.addEventListener("DOMContentLoaded", () => {
+    if (sessionStorage.getItem("visited")) {
+        // Remove fade-in animation if the user has already visited
+        document.querySelectorAll(".fade-in").forEach((element) => {
+            element.style.animation = "none";
+            element.style.opacity = "1"; // Ensure elements stay visible
+        });
+    } else {
+        // Mark the home page as visited
+        sessionStorage.setItem("visited", "true");
+    }
+    
     const addressContainer = document.getElementById("address-container");
     const addAddressBtn = document.getElementById("add-address-btn");
     const calculateRouteBtn = document.getElementById("calculate-route-btn");
