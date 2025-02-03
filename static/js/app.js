@@ -1,9 +1,13 @@
+let googleMapsApiKey = "";
+
 async function loadGoogleMapsAPI() {
     try {
         const response = await fetch("/get-api-key");
         const data = await response.json();
+        googleMapsApiKey = data.api_key;
+
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.api_key}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
         script.async = true;
         script.defer = true;
         script.setAttribute("loading", "async");
@@ -65,6 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const addressContainer = document.getElementById("address-container");
     const addAddressBtn = document.getElementById("add-address-btn");
     const calculateRouteBtn = document.getElementById("calculate-route-btn");
+    const getLocationBtn = document.getElementById("get-location-btn").addEventListener("click", fetchUserLocation);
+
+    if (getLocationBtn) {
+        getLocationBtn.addEventListener("click", fetchUserLocation);
+    }
 
     // Function to create a new address input field with a remove button
     function createAddressField() {
@@ -147,6 +156,42 @@ document.addEventListener("DOMContentLoaded", () => {
             
             return { error: error.error || "An unknown error occurred." };
         }
+    }
+
+    // Function to get user's location and reverse geocode it into an address
+    async function fetchUserLocation() {
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log(`User location: ${latitude}, ${longitude}`);
+
+            if (!googleMapsApiKey) {
+                alert("Google Maps API key is not available.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleMapsApiKey}`);
+                const data = await response.json();
+
+                if (data.status === "OK" && data.results.length > 0) {
+                    const userAddress = data.results[0].formatted_address;
+                    document.getElementById("starting-address").value = userAddress;
+                } else {
+                    alert("Unable to retrieve address from location. Please enter it manually.");
+                }
+            } catch (error) {
+                console.error("Error fetching address from location:", error);
+                alert("An error occurred while retrieving your location.");
+            }
+        }, (error) => {
+            console.error("Geolocation error:", error);
+            alert("Failed to get your location. Please ensure location services are enabled.");
+        });
     }
 
     // Handle form submission
