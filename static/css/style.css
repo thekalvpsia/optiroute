@@ -12,10 +12,22 @@ body {
 }
 
 main {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+#content-container,
+#results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
 }
 
 /* Header */
@@ -47,6 +59,8 @@ header h1 {
     width: 90%;
     max-width: 500px;
     text-align: center;
+    min-height: auto;
+    margin-bottom: 20px;
 }
 
 #form-section h2 {
@@ -176,7 +190,7 @@ button:active {
     margin: 0;
 }
 
-#results-container {
+#results-content {
     text-align: center;
     background-color: #44475a;
     padding: 20px;
@@ -184,14 +198,13 @@ button:active {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     width: 90%;
     max-width: 500px;
-    margin: 40px auto;
     color: #f8f8f2;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#results-container h2 {
+#results-content h2 {
     margin-bottom: 10px;
 }
 
@@ -261,10 +274,51 @@ button:active {
     100% { transform: rotate(360deg); }
 }
 
+#footer {
+    width: 100%;
+    background: #222;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: auto;
+}
+
+.social-links {
+    margin-bottom: 10px;
+}
+
+.social-links a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    transition: opacity 0.3s;
+}
+
+.social-icon:hover {
+    opacity: 0.7;
+}
+
+.icon-credit {
+    font-size: 0.9rem;
+}
+
+.icon-credit a {
+    color: #1e90ff;
+    text-decoration: none;
+}
+
+.icon-credit a:hover {
+    text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #form-section,
-    #results-container {
+    #results-content {
         width: 80%;
         padding: 15px;
         max-width: 400px;
