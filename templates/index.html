@@ -7,57 +7,73 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header>
-        <h1>OptiRoute</h1>
-        <p class="subtitle">Plan the most efficient route for your deliveries.</p>
-    </header>
-
     <main>
-        <section id="form-section">
-            <form id="route-form">
-                <!-- Starting Point Input -->
-                <div class="starting-point">
-                    <div class="starting-point-container">
-                        <input
-                            type="text"
-                            id="starting-address"
-                            name="starting_address"
-                            placeholder="Enter starting location"
-                            required
-                        />
-                        <button class="invisible-btn" aria-hidden="true"></button>
+        <div id="content-container">
+            <header>
+                <h1>OptiRoute</h1>
+                <p class="subtitle">Plan the most efficient route for your deliveries.</p>
+            </header>
+            <section id="form-section">
+                <form id="route-form">
+                    <!-- Starting Point Input -->
+                    <div class="starting-point">
+                        <div class="starting-point-container">
+                            <input
+                                type="text"
+                                id="starting-address"
+                                name="starting_address"
+                                placeholder="Enter starting location"
+                                required
+                            />
+                            <button class="invisible-btn" aria-hidden="true"></button>
+                        </div>
+                        <button type="button" id="get-location-btn">
+                            <img src="/static/images/location-icon.png" alt="Location" />
+                            Use current location
+                        </button>
                     </div>
-                    <button type="button" id="get-location-btn">
-                        <img src="/static/images/location-icon.png" alt="Location" />
-                        Use current location
+
+                    <!-- Delivery Locations -->
+                    <div id="address-container">
+                        <div class="address-field">
+                            <input
+                                type="text"
+                                name="address"
+                                placeholder="Enter an address or place"
+                                required
+                                
+                            />
+                            <button class="invisible-btn" aria-hidden="true"></button>
+                        </div>
+                    </div>
+
+                    <!-- Add Destination Button -->
+                    <button type="button" id="add-address-btn">
+                        <img src="/static/images/add-icon.png" alt="Add" />
+                        Add destination
                     </button>
-                </div>
 
-                <!-- Delivery Locations -->
-                <div id="address-container">
-                    <div class="address-field">
-                        <input
-                            type="text"
-                            name="address"
-                            placeholder="Enter an address or place"
-                            required
-                            
-                        />
-                        <button class="invisible-btn" aria-hidden="true"></button>
-                    </div>
-                </div>
-
-                <!-- Add Destination Button -->
-                <button type="button" id="add-address-btn">
-                    <img src="/static/images/add-icon.png" alt="Add" />
-                    Add destination
-                </button>
-
-                <!-- Calculate Route Button -->
-                <button type="submit" id="calculate-route-btn">Calculate Route</button>
-            </form>
-        </section>
+                    <!-- Calculate Route Button -->
+                    <button type="submit" id="calculate-route-btn">Calculate Route</button>
+                </form>
+            </section>
+        </div>
     </main>
+
+    <footer id="footer">
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/aristotle-temmerath" target="_blank">
+                <img src="/static/images/linkedin-icon.png" alt="LinkedIn" class="social-icon">
+            </a>
+            <a href="https://github.com/thekalvpsia" target="_blank">
+                <img src="/static/images/github-icon.png" alt="GitHub" class="social-icon">
+            </a>
+        </div>
+        <p class="icon-credit">
+            Icons by <a href="https://www.flaticon.com/authors/freepik" target="_blank">Freepik</a> from
+            <a href="https://www.flaticon.com/" target="_blank">Flaticon</a>.
+        </p>
+    </footer>
 
     <div id="loading-screen">
         <div class="loading-spinner"></div>
