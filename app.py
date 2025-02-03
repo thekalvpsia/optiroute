@@ -114,4 +114,5 @@ def calculate_route():
     return jsonify({"optimized_route": route_response, "maps_link": maps_link})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
