@@ -208,12 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        calculateRouteBtn.textContent = "Calculating...";
+        document.getElementById("loading-screen").style.display = "flex";
         calculateRouteBtn.disabled = true;
 
         const result = await fetchOptimizedRoute(startingPoint, deliveryLocations);
 
-        calculateRouteBtn.textContent = "Calculate Route";
+        document.getElementById("loading-screen").style.display = "none";
         calculateRouteBtn.disabled = false;
 
         if (result.error && result.error !== "Handled") {
