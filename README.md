@@ -5,7 +5,7 @@ OptiRoute is a web application designed to help delivery drivers find the most e
 ## Demo
 
 A live demo of OptiRoute is hosted on **[Render](https://render.com/)**.  
-[Try OptiRoute](https://optiroute.onrender.com)
+[Try OptiRoute](https://aris-optiroute.onrender.com)
 
 ## Features
 
