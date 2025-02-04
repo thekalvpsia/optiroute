@@ -1,16 +1,11 @@
-let googleMapsApiKey = "";
-
 async function loadGoogleMapsAPI() {
     try {
         const response = await fetch("/get-api-key");
         const data = await response.json();
-        googleMapsApiKey = data.api_key;
-
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.api_key}&libraries=places`;
         script.async = true;
         script.defer = true;
-        script.setAttribute("loading", "async");
 
         script.onload = () => {
             console.log("Google Maps API loaded successfully.");
@@ -180,18 +175,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const { latitude, longitude } = position.coords;
             console.log(`User location: ${latitude}, ${longitude}`);
 
-            if (!googleMapsApiKey) {
-                alert("Google Maps API key is not available.");
-                return;
-            }
-
             try {
-                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${googleMapsApiKey}`);
+                // Send request to Flask backend instead of directly to Google
+                const response = await fetch("/reverse-geocode", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ latitude, longitude })
+                });
+
                 const data = await response.json();
 
-                if (data.status === "OK" && data.results.length > 0) {
-                    const userAddress = data.results[0].formatted_address;
-                    document.getElementById("starting-address").value = userAddress;
+                if (data.address) {
+                    document.getElementById("starting-address").value = data.address;
                 } else {
                     alert("Unable to retrieve address from location. Please enter it manually.");
                 }
