@@ -6,14 +6,15 @@ import requests
 app = Flask(__name__)
 load_dotenv()
 
-API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
+FRONTEND_API_KEY = os.getenv("FRONTEND_API_KEY")
+BACKEND_API_KEY = os.getenv("BACKEND_API_KEY")
 
 # Function to get coordinates from an address
 def get_coordinates(address):
     if not address.strip():
         return None  # Handle empty address inputs
 
-    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={API_KEY}"
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={BACKEND_API_KEY}"
     try:
         response = requests.get(url).json()
 
@@ -51,7 +52,7 @@ def calculate_optimized_route(starting_point, locations):
         destination = f"{location_coords[-1][0]},{location_coords[-1][1]}"
         waypoints = "|".join([f"{lat},{lng}" for lat, lng in location_coords[1:-1]])
 
-        url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&waypoints=optimize:true|{waypoints}&key={API_KEY}"
+        url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination}&waypoints=optimize:true|{waypoints}&key={BACKEND_API_KEY}"
         response = requests.get(url).json()
 
         if response.get("status") == "OK":
@@ -88,7 +89,7 @@ def results():
 
 @app.route("/get-api-key")
 def get_api_key():
-    return jsonify({"api_key": API_KEY})
+    return jsonify({"api_key": FRONTEND_API_KEY})
 
 @app.route("/calculate-route", methods=["POST"])
 def calculate_route():
@@ -112,6 +113,25 @@ def calculate_route():
     # Now we are guaranteed that route_response is a valid list of coordinates
     maps_link = generate_google_maps_link(route_response)
     return jsonify({"optimized_route": route_response, "maps_link": maps_link})
+
+@app.route("/reverse-geocode", methods=["POST"])
+def reverse_geocode():
+    """Takes latitude and longitude, returns the closest address using the backend API key."""
+    data = request.get_json()
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
+    if not latitude or not longitude:
+        return jsonify({"error": "Missing latitude or longitude"}), 400
+
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={BACKEND_API_KEY}"
+    response = requests.get(url).json()
+
+    if response.get("status") == "OK" and response.get("results"):
+        address = response["results"][0]["formatted_address"]
+        return jsonify({"address": address})
+
+    return jsonify({"error": "Unable to retrieve address"}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
