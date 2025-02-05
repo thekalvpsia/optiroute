@@ -13,10 +13,11 @@ A live demo of OptiRoute is hosted on **[Render](https://render.com/)**.
 - **Google Maps Integration**: Provides a link to open the optimized route in Google Maps.
 - **Location Autocomplete**: Allows users to enter business names or addresses with Google Places Autocomplete.
 - **Current Location Support**: Users can set their starting point using their current location.
-- **Error Handling**: Alerts users when an invalid address is entered.
+- **Error Handling**: Alerts users when an invalid address is entered and suggests corrections.
 - **Dark Theme**: Styled with a minimalist Dracula-inspired dark theme.
 - **Mobile-Friendly Design**: Works on both desktop and mobile devices.
 - **Smooth Animations**: Fade-in effect for a better user experience.
+- **Improved API Security**: Utilizes a hybrid approach to secure API keys while maintaining performance.
 
 ## Technologies Used
 
@@ -31,6 +32,7 @@ A live demo of OptiRoute is hosted on **[Render](https://render.com/)**.
 - **User Accounts**: Save frequently used routes.
 - **Route Customization**: Allow manual reordering of destinations.
 - **Traffic Considerations**: Optimize based on real-time traffic data.
+- **Offline Support**: Enable saving and accessing routes without an internet connection.
 
 ## How to Use
 
@@ -46,11 +48,13 @@ A live demo of OptiRoute is hosted on **[Render](https://render.com/)**.
    ```bash
    pip install -r requirements.txt
    ```
-4. Set up your environment variables (Google Maps API key):
-   ```bash
-   cp .env.example .env
-   ```
-   Then, add your Google Maps API key inside the `.env` file.
+4. Set up your API keys:
+   - Frontend API Key: Open `index.html`, locate the Google Maps `<script>` tag, and replace the existing API key (the value between `key=` and `&libraries=places`) with your own. **If you try running this with my key, it won’t work. Nice try.**
+   - Backend API Key: Create a `.env` file from the example template:
+     ```bash
+     cp .env.example .env
+     ```
+     Then, add your BACKEND_API_KEY inside the `.env` file.
 5. Run the application:
    ```bash
    python app.py
