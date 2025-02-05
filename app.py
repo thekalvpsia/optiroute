@@ -6,7 +6,6 @@ import requests
 app = Flask(__name__)
 load_dotenv()
 
-FRONTEND_API_KEY = os.getenv("FRONTEND_API_KEY")
 BACKEND_API_KEY = os.getenv("BACKEND_API_KEY")
 
 # Function to get coordinates from an address
@@ -86,10 +85,6 @@ def index():
 @app.route("/results")
 def results():
     return render_template("results.html")
-
-@app.route("/get-api-key")
-def get_api_key():
-    return jsonify({"api_key": FRONTEND_API_KEY})
 
 @app.route("/calculate-route", methods=["POST"])
 def calculate_route():

@@ -1,40 +1,38 @@
-async function loadGoogleMapsAPI() {
-    try {
-        const response = await fetch("/get-api-key");
-        const data = await response.json();
-        const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${data.api_key}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-
-        script.onload = () => {
-            console.log("Google Maps API loaded successfully.");
-            initializeAutocompleteFields(); // Initialize autocomplete only after API loads
-        };
-
-        document.getElementById("google-maps-script").replaceWith(script);
-    } catch (error) {
-        console.error("Failed to load Google Maps API:", error);
-    }
-}
-
-// Initialize autocomplete for input fields AFTER Google Maps API is loaded
+// Ensure Google Maps API is fully loaded before initializing autocomplete
 function initializeAutocompleteFields() {
-    const startingAddressInput = document.getElementById("starting-address");
-    if (startingAddressInput) {
-        new google.maps.places.Autocomplete(startingAddressInput, {
-            types: ["establishment", "geocode"],
+    if (typeof google !== "undefined" && google.maps && google.maps.places) {
+        console.log("Google Maps API loaded. Initializing autocomplete...");
+    
+        const startingAddressInput = document.getElementById("starting-address");
+        if (startingAddressInput) {
+            new google.maps.places.Autocomplete(startingAddressInput, {
+                types: ["establishment", "geocode"], 
+                componentRestrictions: { country: "us" },
+            });
+        }
+
+        document.querySelectorAll("input[name='address']").forEach((input) => {
+            new google.maps.places.Autocomplete(input, {
+                types: ["establishment", "geocode"],
+                componentRestrictions: { country: "us" },
+            });
         });
+
+        console.log("Autocomplete initialized for all input fields.");
+    } else {
+        console.warn("Google Maps API is not loaded yet.");
     }
-
-    document.querySelectorAll("input[name='address']").forEach((input) => {
-        new google.maps.places.Autocomplete(input, {
-            types: ["establishment", "geocode"],
-        });
-    });
-
-    console.log("Autocomplete initialized for all input fields.");
 }
+
+// Wait for API to load before running initializeAutocompleteFields()
+window.addEventListener("load", () => {
+    if (typeof google !== "undefined" && google.maps) {
+        initializeAutocompleteFields();
+    } else {
+        console.warn("Google Maps API not available. Retrying in 500ms...");
+        setTimeout(initializeAutocompleteFields, 500); // Retry after delay
+    }
+});
 
 // Function to initialize autocomplete with business names and addresses
 function initializeAutocomplete(inputElement) {
@@ -53,11 +51,6 @@ function displayGeocodingError(invalidAddresses) {
     const errorMessage = `The following locations could not be found:\n\n${invalidAddresses.join("\n")}\n\nTry entering the full address instead.`;
     alert(errorMessage);
 }
-
-// Handle page load
-document.addEventListener("DOMContentLoaded", async () => {
-    await loadGoogleMapsAPI(); // Load Google Maps API first
-});
 
 // Address field management
 document.addEventListener("DOMContentLoaded", () => {
