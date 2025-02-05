@@ -345,6 +345,14 @@ button:active {
     text-decoration: underline;
 }
 
+.note {
+    font-size: 0.9rem;
+    color: #ffb86c;
+    margin-top: 15px;
+    text-align: center;
+    max-width: 400px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #form-section,
